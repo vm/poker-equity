@@ -1,5 +1,6 @@
 from collections import namedtuple
 from enum import IntEnum, Enum, auto
+from functools import total_ordering
 
 class Rank(IntEnum):
     TWO = 2
@@ -16,10 +17,18 @@ class Rank(IntEnum):
     KING = 13
     ACE = 14
 
+
 class Suit(Enum):
     SPADE = auto()
     HEART = auto()
     DIAMOND = auto()
     CLUB = auto()
 
-Card = namedtuple('Card', ['rank', 'suit'])
+
+@total_ordering
+class Card(namedtuple('Card', ['rank', 'suit'])):
+    def __eq__(self, other):
+        return self.rank == other.rank
+
+    def __lt__(self, other):
+        return self.rank < other.rank
