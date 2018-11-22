@@ -35,7 +35,6 @@ class Card(namedtuple('Card', ['rank', 'suit'])):
         return self.rank < other.rank
 
 
-
 class HandCategory(IntEnum):
     HIGH_CARD = 1
     ONE_PAIR = 2

@@ -40,3 +40,4 @@ def test_hand_order():
 
     assert hand1 == hand2
     assert hand1 < hand3
+    assert hand3 > hand1
