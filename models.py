@@ -1,7 +1,12 @@
-from collections import namedtuple
+from collections import Counter
 from enum import IntEnum, Enum, auto
 from functools import total_ordering
-from operator import ne, lt
+from operator import ne, lt, attrgetter
+
+from funcy import lmap
+
+
+HAND_SIZE = 5
 
 class Rank(IntEnum):
     TWO = 2
@@ -27,7 +32,11 @@ class Suit(Enum):
 
 
 @total_ordering
-class Card(namedtuple('Card', ['rank', 'suit'])):
+class Card:
+    def __init__(self, rank, suit):
+        self.rank = rank
+        self.suit = suit
+
     def __eq__(self, other):
         return self.rank == other.rank
 
@@ -51,15 +60,38 @@ class HandCategory(IntEnum):
 
 
 @total_ordering
-class Hand(namedtuple('Hand', ['category', 'kickers'])):
+class Hand:
+    def __init__(self, category, cards):
+        self.category = category
+        self.cards = cards
+
     def __eq__(self, other):
         return (
             self.category == other.category or
-            all(map(lambda x: ne(*x), zip(self.kickers, other.kickers)))
+            all(map(lambda x: ne(*x), zip(self.cards, other.cards)))
         )
 
     def __lt__(self, other):
         return (
             self.category < other.category or
-            all(map(lambda x: lt(*x), zip(self.kickers, other.kickers)))
+            all(map(lambda x: lt(*x), zip(self.cards, other.cards)))
         )
+
+    @property
+    def _ranks(self):
+        return lmap(attrgetter('rank'), self.cards)
+
+    @property
+    def _suits(self):
+        return lmap(attrgetter('suit'), self.cards)
+
+    def _is_straight(self):
+        # doesn't handle low A
+        return (len(set(self._ranks)) == HAND_SIZE and
+            max(self._ranks) - min(self._ranks) == HAND_SIZE - 1
+        )
+
+    def _is_flush(self):
+        suit_counter = Counter(self._suits)
+        suit, count = suit_counter.most_common()[0]
+        return count >= HAND_SIZE

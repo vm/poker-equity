@@ -41,3 +41,33 @@ def test_hand_order():
     assert hand1 == hand2
     assert hand1 < hand3
     assert hand3 > hand1
+
+
+def test_hand_is_flush():
+    card1 = Card(Rank.TWO, Suit.SPADE)
+    card2 = Card(Rank.THREE, Suit.SPADE)
+    card3 = Card(Rank.TEN, Suit.SPADE)
+    card4 = Card(Rank.KING, Suit.SPADE)
+    card5 = Card(Rank.ACE, Suit.SPADE)
+    card6 = Card(Rank.ACE, Suit.HEART)
+
+    hand1 = Hand(HandCategory.HIGH_CARD, [card1, card2, card3, card4, card5])
+    hand2 = Hand(HandCategory.ONE_PAIR, [card1, card2, card3, card5, card6])
+
+    assert hand1._is_flush()
+    assert not hand2._is_flush()
+
+
+def test_hand_is_straight():
+    card1 = Card(Rank.TEN, Suit.SPADE)
+    card2 = Card(Rank.JACK, Suit.SPADE)
+    card3 = Card(Rank.THREE, Suit.SPADE)
+    card4 = Card(Rank.KING, Suit.SPADE)
+    card5 = Card(Rank.ACE, Suit.SPADE)
+    card6 = Card(Rank.QUEEN, Suit.SPADE)
+
+    hand1 = Hand(HandCategory.HIGH_CARD, [card1, card2, card4, card5, card6])
+    hand2 = Hand(HandCategory.ONE_PAIR, [card1, card2, card3, card4, card5])
+
+    assert hand1._is_straight()
+    assert not hand2._is_straight()
