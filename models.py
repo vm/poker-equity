@@ -34,6 +34,9 @@ class Card(namedtuple('Card', ['rank', 'suit'])):
     def __lt__(self, other):
         return self.rank < other.rank
 
+    def __hash__(self):
+        return hash(tuple(self))
+
 
 class HandCategory(IntEnum):
     HIGH_CARD = 1
@@ -48,7 +51,7 @@ class HandCategory(IntEnum):
 
 
 @total_ordering
-class Hand(namedtuple('Hard', ['category', 'kickers'])):
+class Hand(namedtuple('Hand', ['category', 'kickers'])):
     def __eq__(self, other):
         return (
             self.category == other.category or
