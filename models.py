@@ -1,7 +1,7 @@
 from collections import namedtuple
-from enum import Enum, auto
+from enum import IntEnum, Enum, auto
 
-class Rank(Enum):
+class Rank(IntEnum):
     TWO = 2
     THREE = 3
     FOUR = 4
