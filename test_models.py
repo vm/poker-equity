@@ -2,7 +2,7 @@ from operator import attrgetter
 
 from funcy import lmap
 
-from models import Rank, Suit, Card, Hand, HandCategory
+from models import Rank, Suit, Card, Hand
 
 
 def test_rank_order():
@@ -25,8 +25,22 @@ def test_card_sort_same_suit():
     ]
     assert lmap(attrgetter('rank'), sorted(cards, reverse=True)) == [Rank.ACE, Rank.KING, Rank.TWO]
 
+def test_hand_equal():
+    card1 = Card(Rank.TWO, Suit.SPADE)
+    card2 = Card(Rank.THREE, Suit.HEART)
+    card3 = Card(Rank.TEN, Suit.SPADE)
+    card4 = Card(Rank.KING, Suit.CLUB)
+    card5 = Card(Rank.ACE, Suit.SPADE)
+    card6 = Card(Rank.ACE, Suit.HEART)
 
-def test_hand_order():
+    hand1 = Hand([card1, card2, card3, card4, card5])
+    hand2 = Hand([card1, card2, card3, card4, card5])
+    hand3 = Hand([card1, card2, card3, card4, card6])
+
+    assert hand1 == hand2
+    assert hand1 == hand3
+
+def test_hand_flush_vs_two_pair():
     card1 = Card(Rank.TWO, Suit.SPADE)
     card2 = Card(Rank.THREE, Suit.SPADE)
     card3 = Card(Rank.TEN, Suit.SPADE)
@@ -34,13 +48,11 @@ def test_hand_order():
     card5 = Card(Rank.ACE, Suit.SPADE)
     card6 = Card(Rank.ACE, Suit.HEART)
 
-    hand1 = Hand(HandCategory.HIGH_CARD, [card1, card2, card3, card4, card5])
-    hand2 = Hand(HandCategory.HIGH_CARD, [card1, card2, card3, card4, card5])
-    hand3 = Hand(HandCategory.ONE_PAIR, [card1, card2, card3, card5, card6])
+    hand1 = Hand([card1, card2, card3, card4, card5])
+    hand2 = Hand([card1, card2, card3, card5, card6])
 
-    assert hand1 == hand2
-    assert hand1 < hand3
-    assert hand3 > hand1
+    assert hand1 > hand2
+    assert hand2 < hand1
 
 
 def test_hand_is_flush():
@@ -51,11 +63,8 @@ def test_hand_is_flush():
     card5 = Card(Rank.ACE, Suit.SPADE)
     card6 = Card(Rank.ACE, Suit.HEART)
 
-    hand1 = Hand(HandCategory.HIGH_CARD, [card1, card2, card3, card4, card5])
-    hand2 = Hand(HandCategory.ONE_PAIR, [card1, card2, card3, card5, card6])
-
-    assert hand1._is_flush()
-    assert not hand2._is_flush()
+    assert Hand._is_flush([card1, card2, card3, card4, card5])
+    assert not Hand._is_flush([card1, card2, card3, card5, card6])
 
 
 def test_hand_is_straight():
@@ -66,8 +75,5 @@ def test_hand_is_straight():
     card5 = Card(Rank.ACE, Suit.SPADE)
     card6 = Card(Rank.QUEEN, Suit.SPADE)
 
-    hand1 = Hand(HandCategory.HIGH_CARD, [card1, card2, card4, card5, card6])
-    hand2 = Hand(HandCategory.ONE_PAIR, [card1, card2, card3, card4, card5])
-
-    assert hand1._is_straight()
-    assert not hand2._is_straight()
+    assert Hand._is_straight([card1, card2, card4, card5, card6])
+    assert not Hand._is_straight([card1, card2, card3, card4, card5])
