@@ -13,9 +13,13 @@ def generate_boards(pocket, current_board):
     remaining_cards = CARDS - set(current_board) - set(pocket)
     return rcompose(
         rpartial(combinations, BOARD_SIZE - len(current_board)),
-        partial(map, lambda remaining_board: current_board + list(remaining_board)),
+        partial(
+            map,
+            lambda remaining_board: current_board + list(remaining_board)),
         partial(sorted, reverse=True))(remaining_cards)
 
 
 def generate_hands(pocket, board):
-    return lmap(lambda hand: Hand(sorted(hand, reverse=True)), combinations(pocket + board, 5))
+    return lmap(
+        lambda hand: Hand(sorted(hand, reverse=True)),
+        combinations(pocket + board, 5))

@@ -23,7 +23,10 @@ def test_card_sort_same_suit():
         Card(Rank.ACE, Suit.SPADE),
         Card(Rank.KING, Suit.SPADE),
     ]
-    assert lmap(attrgetter('rank'), sorted(cards, reverse=True)) == [Rank.ACE, Rank.KING, Rank.TWO]
+    assert lmap(
+        attrgetter('rank'),
+        sorted(cards, reverse=True)) == [Rank.ACE, Rank.KING, Rank.TWO]
+
 
 def test_hand_eq():
     card1 = Card(Rank.TWO, Suit.SPADE)
@@ -41,6 +44,7 @@ def test_hand_eq():
     assert hand1 == hand3
     assert hand1 >= hand2
     assert hand1 <= hand2
+
 
 def test_hand_ge_le():
     card1 = Card(Rank.TWO, Suit.SPADE)

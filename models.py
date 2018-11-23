@@ -8,6 +8,7 @@ from funcy import lmap, lsplit
 
 HAND_SIZE = 5
 
+
 class Rank(IntEnum):
     TWO = 2
     THREE = 3
