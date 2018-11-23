@@ -72,6 +72,20 @@ def test_hand_high_full_house_vs_low_full_house():
     assert hand1 < hand2
 
 
+def test_hand_non_top_high_card():
+    card1 = Card(Rank.TWO, Suit.CLUB)
+    card2 = Card(Rank.THREE, Suit.SPADE)
+    card3 = Card(Rank.FOUR, Suit.HEART)
+    card4 = Card(Rank.FIVE, Suit.CLUB)
+    card5 = Card(Rank.SIX, Suit.CLUB)
+    card6 = Card(Rank.KING, Suit.SPADE)
+
+    hand1 = Hand([card1, card2, card3, card4, card6])
+    hand2 = Hand([card1, card2, card3, card5, card6])
+
+    assert hand1 < hand2
+
+
 def test_hand_is_flush():
     card1 = Card(Rank.TWO, Suit.SPADE)
     card2 = Card(Rank.THREE, Suit.SPADE)
