@@ -1,7 +1,7 @@
 from collections import Counter
 from enum import IntEnum, Enum, auto
 from functools import total_ordering
-from operator import eq, le, attrgetter
+import operator
 
 from funcy import lmap, lsplit
 
@@ -59,7 +59,6 @@ class HandCategory(IntEnum):
     STRAIGHT_FLUSH = 9
 
 
-# @total_ordering
 class Hand:
     def __init__(self, cards):
         straight = self._is_straight(cards)
@@ -120,24 +119,37 @@ class Hand:
             self.kickers == other.kickers
         )
 
-    def __lt__(self, other):
-        if self.category < other.category:
+    @staticmethod
+    def _operation(h1, h2, operand):
+        if operand(h1.category, h2.category):
             return True
-        for a, b in zip(self.involved, other.involved):
-            if a != b:
-                return a < b
-        for a, b in zip(self.kickers, other.kickers):
-            if a != b:
-                return a < b
+        for i1, i2 in zip(h1.involved, h2.involved):
+            if i1 != i2:
+                return operand(i1, i2)
+        for k1, k2 in zip(h1.kickers, h2.kickers):
+            if k1 != k2:
+                return operand(k1, k2)
         return False
+
+    def __lt__(self, other):
+        return self._operation(self, other, operator.lt)
+
+    def __le__(self, other):
+        return self._operation(self, other, operator.le)
+
+    def __gt__(self, other):
+        return self._operation(self, other, operator.gt)
+
+    def __ge__(self, other):
+        return self._operation(self, other, operator.ge)
 
     @staticmethod
     def _get_ranks(cards):
-        return lmap(attrgetter('rank'), cards)
+        return lmap(operator.attrgetter('rank'), cards)
 
     @staticmethod
     def _get_suits(cards):
-        return lmap(attrgetter('suit'), cards)
+        return lmap(operator.attrgetter('suit'), cards)
 
     @classmethod
     def _is_flush(cls, cards):
