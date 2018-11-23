@@ -56,6 +56,7 @@ def test_hand_ge_le():
     assert hand1 >= hand2
     assert hand2 <= hand1
 
+
 def test_hand_flush_vs_two_pair():
     card1 = Card(Rank.TWO, Suit.SPADE)
     card2 = Card(Rank.THREE, Suit.SPADE)
@@ -93,3 +94,39 @@ def test_hand_is_straight():
 
     assert Hand._is_straight([card1, card2, card4, card5, card6])
     assert not Hand._is_straight([card1, card2, card3, card4, card5])
+
+
+def test_hand_is_three_kind():
+    card1 = Card(Rank.TEN, Suit.SPADE)
+    card2 = Card(Rank.TEN, Suit.HEART)
+    card3 = Card(Rank.TEN, Suit.CLUB)
+    card4 = Card(Rank.JACK, Suit.SPADE)
+    card5 = Card(Rank.THREE, Suit.CLUB)
+    card6 = Card(Rank.QUEEN, Suit.SPADE)
+
+    assert Hand._is_three_kind([card1, card2, card3, card4, card5])
+    assert not Hand._is_three_kind([card2, card3, card4, card5, card6])
+
+
+def test_hand_is_four_kind():
+    card1 = Card(Rank.TEN, Suit.SPADE)
+    card2 = Card(Rank.TEN, Suit.HEART)
+    card3 = Card(Rank.TEN, Suit.CLUB)
+    card4 = Card(Rank.TEN, Suit.DIAMOND)
+    card5 = Card(Rank.JACK, Suit.SPADE)
+    card6 = Card(Rank.THREE, Suit.CLUB)
+
+    assert Hand._is_four_kind([card1, card2, card3, card4, card5])
+    assert not Hand._is_four_kind([card2, card3, card4, card5, card6])
+
+
+def test_hand_is_full_house():
+    card1 = Card(Rank.TEN, Suit.SPADE)
+    card2 = Card(Rank.TEN, Suit.HEART)
+    card3 = Card(Rank.TEN, Suit.CLUB)
+    card4 = Card(Rank.JACK, Suit.DIAMOND)
+    card5 = Card(Rank.JACK, Suit.SPADE)
+    card6 = Card(Rank.THREE, Suit.CLUB)
+
+    assert Hand._is_full_house([card1, card2, card3, card4, card5])
+    assert not Hand._is_full_house([card1, card2, card3, card4, card6])
