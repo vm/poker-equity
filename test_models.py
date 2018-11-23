@@ -28,7 +28,7 @@ def test_card_sort_same_suit():
         sorted(cards, reverse=True)) == [Rank.ACE, Rank.KING, Rank.TWO]
 
 
-def test_hand_eq():
+def test_hand_one_pair_equal():
     card1 = Card(Rank.TWO, Suit.SPADE)
     card2 = Card(Rank.THREE, Suit.HEART)
     card3 = Card(Rank.TEN, Suit.SPADE)
@@ -42,8 +42,6 @@ def test_hand_eq():
 
     assert hand1 == hand2
     assert hand1 == hand3
-    assert hand1 >= hand2
-    assert hand1 <= hand2
 
 
 def test_hand_flush_vs_one_pair():
@@ -58,9 +56,20 @@ def test_hand_flush_vs_one_pair():
     hand2 = Hand([card1, card2, card3, card5, card6])
 
     assert hand1 > hand2
-    assert hand2 < hand1
-    assert hand1 >= hand2
-    assert hand2 <= hand1
+
+
+def test_hand_high_full_house_vs_low_full_house():
+    card1 = Card(Rank.TWO, Suit.CLUB)
+    card2 = Card(Rank.TWO, Suit.SPADE)
+    card3 = Card(Rank.TWO, Suit.HEART)
+    card4 = Card(Rank.KING, Suit.CLUB)
+    card5 = Card(Rank.KING, Suit.SPADE)
+    card6 = Card(Rank.KING, Suit.HEART)
+
+    hand1 = Hand([card1, card2, card3, card4, card5])
+    hand2 = Hand([card1, card2, card4, card5, card6])
+
+    assert hand1 < hand2
 
 
 def test_hand_is_flush():
